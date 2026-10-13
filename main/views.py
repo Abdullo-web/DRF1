@@ -3,7 +3,21 @@ from rest_framework.response import Response
 from .models import Product, Review, Category
 from .serializers import ProductSerializer, ReviewSerializer, ReviewCreateSerializer, CategorySerializer
 from .pagination import CustomPagination
+from drf_yasg.utils import swagger_auto_schema
 
+
+
+
+
+@swagger_auto_schema(
+    method='get',
+    responses={200: ProductSerializer(many=True)}
+)
+@swagger_auto_schema(
+    method='post',
+    request_body=ProductSerializer,
+    responses={201: "Created", 400: "Validation error"}
+)
 
 @api_view(['GET', 'POST'])
 def products(request):
@@ -45,6 +59,20 @@ def products(request):
     return Response(serializer.errors, status=400)
 
 
+@swagger_auto_schema(
+    method='get',
+    responses={200: ProductSerializer(many=True)}
+)
+@swagger_auto_schema(
+    method='put',
+    request_body=ProductSerializer,
+    responses={200: ProductSerializer, 400: "Validation error", 401: "Unauthorized", 403: "Forbidden", 404: "Product not found"}
+)
+
+@swagger_auto_schema(
+    method='delete',
+    responses={204: "Deleted", 401: "Unauthorized", 403: "Forbidden", 404: "Product not found"}
+)
 @api_view(['GET', 'PUT', 'DELETE'])
 def product_detail(request, pk):
     try:
@@ -76,6 +104,17 @@ def product_detail(request, pk):
         return Response(status=204)
 
 
+@swagger_auto_schema(
+    method='get',
+    responses={200: CategorySerializer(many=True)}
+)
+@swagger_auto_schema(
+    method='post',
+    request_body=CategorySerializer,
+    responses={201: "Created", 400: "Validation error"}
+)
+
+
 @api_view(['GET', 'POST'])
 def categories(request):
     if request.method == 'GET':
@@ -94,6 +133,16 @@ def categories(request):
 
     return Response(serializer.errors, status=400)
 
+
+@swagger_auto_schema(
+    method='get',
+    responses={200: CategorySerializer(many=True)}
+)
+@swagger_auto_schema(
+    method='post',
+    request_body=CategorySerializer,
+    responses={201: "Created", 400: "Validation error"}
+)
 
 @api_view(['GET', 'POST'])
 def product_reviews(request, pk):
